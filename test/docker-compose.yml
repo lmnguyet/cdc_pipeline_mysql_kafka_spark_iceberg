@@ -1,0 +1,63 @@
+# version: '3.1'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_USER: hive
+      POSTGRES_PASSWORD: hive
+      POSTGRES_DB: metastore_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hive -d metastore_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - my-network
+  
+  # hive:
+  #   image: apache/hive:4.0.0
+  #   hostname: hive
+  #   container_name: hive
+  #   ports:
+  #     - 9083:9083
+  #   environment:
+  #     - SERVICE_NAME=metastore
+  #     - DB_DRIVER=postgres
+  #     - SERVICE_OPTS="-Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://postgres:5432/metastore_db -Djavax.jdo.option.ConnectionUserName=hive -Djavax.jdo.option.ConnectionPassword=hive"
+  #   volumes:
+  #     - warehouse:/opt/hive/data/warehouse
+  #     - ./postgresql-42.5.1.jar:/opt/hive/lib/postgres.jar
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   networks:
+  #     - my-network
+
+  hive:
+    image: naushadh/hive-metastore
+    hostname: hive
+    container_name: hive
+    ports:
+      - 9083:9083
+    environment:
+      - DATABASE_DB=metastore_db
+      - DATABASE_USER=hive
+      - DATABASE_PASSWORD=hive
+      - DATABASE_HOST=postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - my-network
+
+volumes:
+  postgres_data:
+  warehouse:
+
+networks:
+  my-network:
+    driver: bridge
