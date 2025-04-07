@@ -1,0 +1,342 @@
+2025-03-30 13:28:19 - INFO - BUCKET pixarfilms ALREADY EXISTS 
+
+2025-03-30 13:28:21 - INFO - CREATING NEW DELTA TABLE AT s3a://pixarfilms/films 
+
+2025-03-30 13:28:35 - INFO - CREATED NEW DELTA TABLE AT s3a://pixarfilms/films 
+
+2025-03-30 13:28:35 - INFO - SCHEMA OF THE PROCESSED DATAFRAME 
+StructType([StructField('number', IntegerType(), True), StructField('film', StringType(), True), StructField('release_date', DateType(), True), StructField('run_time', IntegerType(), True), StructField('film_rating', StringType(), True), StructField('plot', StringType(), True), StructField('op', StringType(), True), StructField('ts_ms', IntegerType(), True)]) 
+
+2025-03-30 13:28:35 - INFO - Callback Server Starting
+2025-03-30 13:28:35 - INFO - Socket listening on ('127.0.0.1', 33345)
+2025-03-30 13:28:36 - INFO - NUMBER OF REFRESHING: 1 
+
+2025-03-30 13:28:38 - INFO - Python Server ready to receive messages
+2025-03-30 13:28:38 - INFO - Received command c on object id p0
+2025-03-30 13:28:38 - INFO - NUMBER OF RECORDS: 0 
+
+2025-03-30 13:28:39 - INFO - 
++------+----+------------+--------+-----------+----+
+|number|film|release_date|run_time|film_rating|plot|
++------+----+------------+--------+-----------+----+
++------+----+------------+--------+-----------+----+
+
+
+2025-03-30 13:29:09 - INFO - NUMBER OF REFRESHING: 2 
+
+2025-03-30 13:29:10 - INFO - NUMBER OF RECORDS: 28 
+
+2025-03-30 13:29:10 - INFO - 
++------+-------------------+------------+--------+-----------+--------------------+
+|number|               film|release_date|run_time|film_rating|                plot|
++------+-------------------+------------+--------+-----------+--------------------+
+|     1|          Toy Story|  1995-11-22|      81|          G|A cowboy doll is ...|
+|     2|       A Bug's Life|  1998-11-25|      95|          G|A misfit ant, loo...|
+|     3|        Toy Story 2|  1999-11-24|      92|          G|When Woody is sto...|
+|     4|     Monsters, Inc.|  2001-11-02|      92|          G|In order to power...|
+|     5|       Finding Nemo|  2003-05-30|     100|          G|After his son is ...|
+|     6|    The Incredibles|  2004-11-05|     115|         PG|While trying to l...|
+|     7|               Cars|  2006-06-09|     116|          G|On the way to the...|
+|     8|        Ratatouille|  2007-06-29|     111|          G|A rat who can coo...|
+|     9|             WALL-E|  2008-06-27|      98|          G|A robot who is re...|
+|    10|                 Up|  2009-05-29|      96|         PG|78-year-old Carl ...|
+|    11|        Toy Story 3|  2010-06-18|     103|          G|The toys are mist...|
+|    12|             Cars 2|  2011-06-24|     106|          G|Star race car Lig...|
+|    13|              Brave|  2012-06-22|      93|         PG|Determined to mak...|
+|    14|Monsters University|  2013-06-21|     104|          G|A look at the rel...|
+|    15|         Inside Out|  2015-06-19|      95|         PG|After young Riley...|
+|    16|  The Good Dinosaur|  2015-11-25|      93|         PG|In a world where ...|
+|    17|       Finding Dory|  2016-06-17|      97|         PG|Friendly but forg...|
+|    18|             Cars 3|  2017-06-16|     102|          G|Lightning McQueen...|
+|    19|               Coco|  2017-11-22|     105|         PG|Aspiring musician...|
+|    20|      Incredibles 2|  2018-06-15|     118|         PG|The Incredibles f...|
+|    21|        Toy Story 4|  2019-06-21|     100|          G|When a new toy ca...|
+|    22|             Onward|  2020-03-06|     102|         PG|Teenage elf broth...|
+|    23|               Soul|  2020-12-25|     100|         PG|Joe is a middle-s...|
+|    24|               Luca|  2021-06-18|      95|         PG|On the Italian Ri...|
+|    25|        Turning Red|  2022-03-11|     100|         PG|A thirteen-year-o...|
+|    26|          Lightyear|  2022-06-17|     105|         PG|While spending ye...|
+|    27|          Elemental|  2023-06-16|     101|         PG|Follows Ember and...|
+|    28|       Inside Out 2|  2024-06-14|      96|         PG|A sequel that fea...|
++------+-------------------+------------+--------+-----------+--------------------+
+
+
+2025-03-30 13:29:38 - INFO - Received command c on object id p0
+2025-03-30 13:29:40 - INFO - NUMBER OF REFRESHING: 3 
+
+2025-03-30 13:29:42 - INFO - NUMBER OF RECORDS: 29 
+
+2025-03-30 13:29:43 - INFO - 
++------+-------------------+------------+--------+-----------+--------------------+
+|number|               film|release_date|run_time|film_rating|                plot|
++------+-------------------+------------+--------+-----------+--------------------+
+|     1|          Toy Story|  1995-11-22|      81|          G|A cowboy doll is ...|
+|     2|       A Bug's Life|  1998-11-25|      95|          G|A misfit ant, loo...|
+|     3|        Toy Story 2|  1999-11-24|      92|          G|When Woody is sto...|
+|     4|     Monsters, Inc.|  2001-11-02|      92|          G|In order to power...|
+|     5|       Finding Nemo|  2003-05-30|     100|          G|After his son is ...|
+|     6|    The Incredibles|  2004-11-05|     115|         PG|While trying to l...|
+|     7|               Cars|  2006-06-09|     116|          G|On the way to the...|
+|     8|        Ratatouille|  2007-06-29|     111|          G|A rat who can coo...|
+|     9|             WALL-E|  2008-06-27|      98|          G|A robot who is re...|
+|    10|                 Up|  2009-05-29|      96|         PG|78-year-old Carl ...|
+|    11|        Toy Story 3|  2010-06-18|     103|          G|The toys are mist...|
+|    12|             Cars 2|  2011-06-24|     106|          G|Star race car Lig...|
+|    13|              Brave|  2012-06-22|      93|         PG|Determined to mak...|
+|    14|Monsters University|  2013-06-21|     104|          G|A look at the rel...|
+|    15|         Inside Out|  2015-06-19|      95|         PG|After young Riley...|
+|    16|  The Good Dinosaur|  2015-11-25|      93|         PG|In a world where ...|
+|    17|       Finding Dory|  2016-06-17|      97|         PG|Friendly but forg...|
+|    18|             Cars 3|  2017-06-16|     102|          G|Lightning McQueen...|
+|    19|               Coco|  2017-11-22|     105|         PG|Aspiring musician...|
+|    20|      Incredibles 2|  2018-06-15|     118|         PG|The Incredibles f...|
+|    21|        Toy Story 4|  2019-06-21|     100|          G|When a new toy ca...|
+|    22|             Onward|  2020-03-06|     102|         PG|Teenage elf broth...|
+|    23|               Soul|  2020-12-25|     100|         PG|Joe is a middle-s...|
+|    24|               Luca|  2021-06-18|      95|         PG|On the Italian Ri...|
+|    25|        Turning Red|  2022-03-11|     100|         PG|A thirteen-year-o...|
+|    26|          Lightyear|  2022-06-17|     105|         PG|While spending ye...|
+|    27|          Elemental|  2023-06-16|     101|         PG|Follows Ember and...|
+|    28|       Inside Out 2|  2024-06-14|      96|         PG|A sequel that fea...|
+|    29|       Inside Out 3|  2025-01-01|      90|         PG|                    |
++------+-------------------+------------+--------+-----------+--------------------+
+
+
+2025-03-30 13:30:13 - INFO - NUMBER OF REFRESHING: 4 
+
+2025-03-30 13:30:14 - INFO - NUMBER OF RECORDS: 29 
+
+2025-03-30 13:30:14 - INFO - 
++------+-------------------+------------+--------+-----------+--------------------+
+|number|               film|release_date|run_time|film_rating|                plot|
++------+-------------------+------------+--------+-----------+--------------------+
+|     1|          Toy Story|  1995-11-22|      81|          G|A cowboy doll is ...|
+|     2|       A Bug's Life|  1998-11-25|      95|          G|A misfit ant, loo...|
+|     3|        Toy Story 2|  1999-11-24|      92|          G|When Woody is sto...|
+|     4|     Monsters, Inc.|  2001-11-02|      92|          G|In order to power...|
+|     5|       Finding Nemo|  2003-05-30|     100|          G|After his son is ...|
+|     6|    The Incredibles|  2004-11-05|     115|         PG|While trying to l...|
+|     7|               Cars|  2006-06-09|     116|          G|On the way to the...|
+|     8|        Ratatouille|  2007-06-29|     111|          G|A rat who can coo...|
+|     9|             WALL-E|  2008-06-27|      98|          G|A robot who is re...|
+|    10|                 Up|  2009-05-29|      96|         PG|78-year-old Carl ...|
+|    11|        Toy Story 3|  2010-06-18|     103|          G|The toys are mist...|
+|    12|             Cars 2|  2011-06-24|     106|          G|Star race car Lig...|
+|    13|              Brave|  2012-06-22|      93|         PG|Determined to mak...|
+|    14|Monsters University|  2013-06-21|     104|          G|A look at the rel...|
+|    15|         Inside Out|  2015-06-19|      95|         PG|After young Riley...|
+|    16|  The Good Dinosaur|  2015-11-25|      93|         PG|In a world where ...|
+|    17|       Finding Dory|  2016-06-17|      97|         PG|Friendly but forg...|
+|    18|             Cars 3|  2017-06-16|     102|          G|Lightning McQueen...|
+|    19|               Coco|  2017-11-22|     105|         PG|Aspiring musician...|
+|    20|      Incredibles 2|  2018-06-15|     118|         PG|The Incredibles f...|
+|    21|        Toy Story 4|  2019-06-21|     100|          G|When a new toy ca...|
+|    22|             Onward|  2020-03-06|     102|         PG|Teenage elf broth...|
+|    23|               Soul|  2020-12-25|     100|         PG|Joe is a middle-s...|
+|    24|               Luca|  2021-06-18|      95|         PG|On the Italian Ri...|
+|    25|        Turning Red|  2022-03-11|     100|         PG|A thirteen-year-o...|
+|    26|          Lightyear|  2022-06-17|     105|         PG|While spending ye...|
+|    27|          Elemental|  2023-06-16|     101|         PG|Follows Ember and...|
+|    28|       Inside Out 2|  2024-06-14|      96|         PG|A sequel that fea...|
+|    29|       Inside Out 3|  2025-01-01|      90|         PG|                    |
++------+-------------------+------------+--------+-----------+--------------------+
+
+
+2025-03-30 13:30:28 - INFO - Received command c on object id p0
+2025-03-30 13:30:44 - INFO - NUMBER OF REFRESHING: 5 
+
+2025-03-30 13:30:45 - INFO - NUMBER OF RECORDS: 29 
+
+2025-03-30 13:30:45 - INFO - 
++------+-------------------+------------+--------+-----------+--------------------+
+|number|               film|release_date|run_time|film_rating|                plot|
++------+-------------------+------------+--------+-----------+--------------------+
+|     1|          Toy Story|  1995-11-22|      81|          G|A cowboy doll is ...|
+|     2|       A Bug's Life|  1998-11-25|      95|          G|A misfit ant, loo...|
+|     3|        Toy Story 2|  1999-11-24|      92|          G|When Woody is sto...|
+|     4|     Monsters, Inc.|  2001-11-02|      92|          G|In order to power...|
+|     5|       Finding Nemo|  2003-05-30|     100|          G|After his son is ...|
+|     6|    The Incredibles|  2004-11-05|     115|         PG|While trying to l...|
+|     7|               Cars|  2006-06-09|     116|          G|On the way to the...|
+|     8|        Ratatouille|  2007-06-29|     111|          G|A rat who can coo...|
+|     9|             WALL-E|  2008-06-27|      98|          G|A robot who is re...|
+|    10|                 Up|  2009-05-29|      96|         PG|78-year-old Carl ...|
+|    11|        Toy Story 3|  2010-06-18|     103|          G|The toys are mist...|
+|    12|             Cars 2|  2011-06-24|     106|          G|Star race car Lig...|
+|    13|              Brave|  2012-06-22|      93|         PG|Determined to mak...|
+|    14|Monsters University|  2013-06-21|     104|          G|A look at the rel...|
+|    15|         Inside Out|  2015-06-19|      95|         PG|After young Riley...|
+|    16|  The Good Dinosaur|  2015-11-25|      93|         PG|In a world where ...|
+|    17|       Finding Dory|  2016-06-17|      97|         PG|Friendly but forg...|
+|    18|             Cars 3|  2017-06-16|     102|          G|Lightning McQueen...|
+|    19|               Coco|  2017-11-22|     105|         PG|Aspiring musician...|
+|    20|      Incredibles 2|  2018-06-15|     118|         PG|The Incredibles f...|
+|    21|        Toy Story 4|  2019-06-21|     100|          G|When a new toy ca...|
+|    22|             Onward|  2020-03-06|     102|         PG|Teenage elf broth...|
+|    23|               Soul|  2020-12-25|     100|         PG|Joe is a middle-s...|
+|    24|               Luca|  2021-06-18|      95|         PG|On the Italian Ri...|
+|    25|        Turning Red|  2022-03-11|     100|         PG|A thirteen-year-o...|
+|    26|          Lightyear|  2022-06-17|     105|         PG|While spending ye...|
+|    27|          Elemental|  2023-06-16|     101|         PG|Follows Ember and...|
+|    28|       Inside Out 2|  2024-06-14|      96|         PG|A sequel that fea...|
+|    29|       Inside Out 3|  2025-01-01|     100|         PG|                    |
++------+-------------------+------------+--------+-----------+--------------------+
+
+
+2025-03-30 13:31:15 - INFO - NUMBER OF REFRESHING: 6 
+
+2025-03-30 13:31:16 - INFO - NUMBER OF RECORDS: 29 
+
+2025-03-30 13:31:16 - INFO - 
++------+-------------------+------------+--------+-----------+--------------------+
+|number|               film|release_date|run_time|film_rating|                plot|
++------+-------------------+------------+--------+-----------+--------------------+
+|     1|          Toy Story|  1995-11-22|      81|          G|A cowboy doll is ...|
+|     2|       A Bug's Life|  1998-11-25|      95|          G|A misfit ant, loo...|
+|     3|        Toy Story 2|  1999-11-24|      92|          G|When Woody is sto...|
+|     4|     Monsters, Inc.|  2001-11-02|      92|          G|In order to power...|
+|     5|       Finding Nemo|  2003-05-30|     100|          G|After his son is ...|
+|     6|    The Incredibles|  2004-11-05|     115|         PG|While trying to l...|
+|     7|               Cars|  2006-06-09|     116|          G|On the way to the...|
+|     8|        Ratatouille|  2007-06-29|     111|          G|A rat who can coo...|
+|     9|             WALL-E|  2008-06-27|      98|          G|A robot who is re...|
+|    10|                 Up|  2009-05-29|      96|         PG|78-year-old Carl ...|
+|    11|        Toy Story 3|  2010-06-18|     103|          G|The toys are mist...|
+|    12|             Cars 2|  2011-06-24|     106|          G|Star race car Lig...|
+|    13|              Brave|  2012-06-22|      93|         PG|Determined to mak...|
+|    14|Monsters University|  2013-06-21|     104|          G|A look at the rel...|
+|    15|         Inside Out|  2015-06-19|      95|         PG|After young Riley...|
+|    16|  The Good Dinosaur|  2015-11-25|      93|         PG|In a world where ...|
+|    17|       Finding Dory|  2016-06-17|      97|         PG|Friendly but forg...|
+|    18|             Cars 3|  2017-06-16|     102|          G|Lightning McQueen...|
+|    19|               Coco|  2017-11-22|     105|         PG|Aspiring musician...|
+|    20|      Incredibles 2|  2018-06-15|     118|         PG|The Incredibles f...|
+|    21|        Toy Story 4|  2019-06-21|     100|          G|When a new toy ca...|
+|    22|             Onward|  2020-03-06|     102|         PG|Teenage elf broth...|
+|    23|               Soul|  2020-12-25|     100|         PG|Joe is a middle-s...|
+|    24|               Luca|  2021-06-18|      95|         PG|On the Italian Ri...|
+|    25|        Turning Red|  2022-03-11|     100|         PG|A thirteen-year-o...|
+|    26|          Lightyear|  2022-06-17|     105|         PG|While spending ye...|
+|    27|          Elemental|  2023-06-16|     101|         PG|Follows Ember and...|
+|    28|       Inside Out 2|  2024-06-14|      96|         PG|A sequel that fea...|
+|    29|       Inside Out 3|  2025-01-01|     100|         PG|                    |
++------+-------------------+------------+--------+-----------+--------------------+
+
+
+2025-03-30 13:31:46 - INFO - NUMBER OF REFRESHING: 7 
+
+2025-03-30 13:31:47 - INFO - NUMBER OF RECORDS: 29 
+
+2025-03-30 13:31:47 - INFO - 
++------+-------------------+------------+--------+-----------+--------------------+
+|number|               film|release_date|run_time|film_rating|                plot|
++------+-------------------+------------+--------+-----------+--------------------+
+|     1|          Toy Story|  1995-11-22|      81|          G|A cowboy doll is ...|
+|     2|       A Bug's Life|  1998-11-25|      95|          G|A misfit ant, loo...|
+|     3|        Toy Story 2|  1999-11-24|      92|          G|When Woody is sto...|
+|     4|     Monsters, Inc.|  2001-11-02|      92|          G|In order to power...|
+|     5|       Finding Nemo|  2003-05-30|     100|          G|After his son is ...|
+|     6|    The Incredibles|  2004-11-05|     115|         PG|While trying to l...|
+|     7|               Cars|  2006-06-09|     116|          G|On the way to the...|
+|     8|        Ratatouille|  2007-06-29|     111|          G|A rat who can coo...|
+|     9|             WALL-E|  2008-06-27|      98|          G|A robot who is re...|
+|    10|                 Up|  2009-05-29|      96|         PG|78-year-old Carl ...|
+|    11|        Toy Story 3|  2010-06-18|     103|          G|The toys are mist...|
+|    12|             Cars 2|  2011-06-24|     106|          G|Star race car Lig...|
+|    13|              Brave|  2012-06-22|      93|         PG|Determined to mak...|
+|    14|Monsters University|  2013-06-21|     104|          G|A look at the rel...|
+|    15|         Inside Out|  2015-06-19|      95|         PG|After young Riley...|
+|    16|  The Good Dinosaur|  2015-11-25|      93|         PG|In a world where ...|
+|    17|       Finding Dory|  2016-06-17|      97|         PG|Friendly but forg...|
+|    18|             Cars 3|  2017-06-16|     102|          G|Lightning McQueen...|
+|    19|               Coco|  2017-11-22|     105|         PG|Aspiring musician...|
+|    20|      Incredibles 2|  2018-06-15|     118|         PG|The Incredibles f...|
+|    21|        Toy Story 4|  2019-06-21|     100|          G|When a new toy ca...|
+|    22|             Onward|  2020-03-06|     102|         PG|Teenage elf broth...|
+|    23|               Soul|  2020-12-25|     100|         PG|Joe is a middle-s...|
+|    24|               Luca|  2021-06-18|      95|         PG|On the Italian Ri...|
+|    25|        Turning Red|  2022-03-11|     100|         PG|A thirteen-year-o...|
+|    26|          Lightyear|  2022-06-17|     105|         PG|While spending ye...|
+|    27|          Elemental|  2023-06-16|     101|         PG|Follows Ember and...|
+|    28|       Inside Out 2|  2024-06-14|      96|         PG|A sequel that fea...|
+|    29|       Inside Out 3|  2025-01-01|     100|         PG|                    |
++------+-------------------+------------+--------+-----------+--------------------+
+
+
+2025-03-30 13:32:08 - INFO - Received command c on object id p0
+2025-03-30 13:32:17 - INFO - NUMBER OF REFRESHING: 8 
+
+2025-03-30 13:32:18 - INFO - NUMBER OF RECORDS: 28 
+
+2025-03-30 13:32:18 - INFO - 
++------+-------------------+------------+--------+-----------+--------------------+
+|number|               film|release_date|run_time|film_rating|                plot|
++------+-------------------+------------+--------+-----------+--------------------+
+|     1|          Toy Story|  1995-11-22|      81|          G|A cowboy doll is ...|
+|     2|       A Bug's Life|  1998-11-25|      95|          G|A misfit ant, loo...|
+|     3|        Toy Story 2|  1999-11-24|      92|          G|When Woody is sto...|
+|     4|     Monsters, Inc.|  2001-11-02|      92|          G|In order to power...|
+|     5|       Finding Nemo|  2003-05-30|     100|          G|After his son is ...|
+|     6|    The Incredibles|  2004-11-05|     115|         PG|While trying to l...|
+|     7|               Cars|  2006-06-09|     116|          G|On the way to the...|
+|     8|        Ratatouille|  2007-06-29|     111|          G|A rat who can coo...|
+|     9|             WALL-E|  2008-06-27|      98|          G|A robot who is re...|
+|    10|                 Up|  2009-05-29|      96|         PG|78-year-old Carl ...|
+|    11|        Toy Story 3|  2010-06-18|     103|          G|The toys are mist...|
+|    12|             Cars 2|  2011-06-24|     106|          G|Star race car Lig...|
+|    13|              Brave|  2012-06-22|      93|         PG|Determined to mak...|
+|    14|Monsters University|  2013-06-21|     104|          G|A look at the rel...|
+|    15|         Inside Out|  2015-06-19|      95|         PG|After young Riley...|
+|    16|  The Good Dinosaur|  2015-11-25|      93|         PG|In a world where ...|
+|    17|       Finding Dory|  2016-06-17|      97|         PG|Friendly but forg...|
+|    18|             Cars 3|  2017-06-16|     102|          G|Lightning McQueen...|
+|    19|               Coco|  2017-11-22|     105|         PG|Aspiring musician...|
+|    20|      Incredibles 2|  2018-06-15|     118|         PG|The Incredibles f...|
+|    21|        Toy Story 4|  2019-06-21|     100|          G|When a new toy ca...|
+|    22|             Onward|  2020-03-06|     102|         PG|Teenage elf broth...|
+|    23|               Soul|  2020-12-25|     100|         PG|Joe is a middle-s...|
+|    24|               Luca|  2021-06-18|      95|         PG|On the Italian Ri...|
+|    25|        Turning Red|  2022-03-11|     100|         PG|A thirteen-year-o...|
+|    26|          Lightyear|  2022-06-17|     105|         PG|While spending ye...|
+|    27|          Elemental|  2023-06-16|     101|         PG|Follows Ember and...|
+|    28|       Inside Out 2|  2024-06-14|      96|         PG|A sequel that fea...|
++------+-------------------+------------+--------+-----------+--------------------+
+
+
+2025-03-30 13:32:48 - INFO - NUMBER OF REFRESHING: 9 
+
+2025-03-30 13:32:48 - INFO - NUMBER OF RECORDS: 28 
+
+2025-03-30 13:32:49 - INFO - 
++------+-------------------+------------+--------+-----------+--------------------+
+|number|               film|release_date|run_time|film_rating|                plot|
++------+-------------------+------------+--------+-----------+--------------------+
+|     1|          Toy Story|  1995-11-22|      81|          G|A cowboy doll is ...|
+|     2|       A Bug's Life|  1998-11-25|      95|          G|A misfit ant, loo...|
+|     3|        Toy Story 2|  1999-11-24|      92|          G|When Woody is sto...|
+|     4|     Monsters, Inc.|  2001-11-02|      92|          G|In order to power...|
+|     5|       Finding Nemo|  2003-05-30|     100|          G|After his son is ...|
+|     6|    The Incredibles|  2004-11-05|     115|         PG|While trying to l...|
+|     7|               Cars|  2006-06-09|     116|          G|On the way to the...|
+|     8|        Ratatouille|  2007-06-29|     111|          G|A rat who can coo...|
+|     9|             WALL-E|  2008-06-27|      98|          G|A robot who is re...|
+|    10|                 Up|  2009-05-29|      96|         PG|78-year-old Carl ...|
+|    11|        Toy Story 3|  2010-06-18|     103|          G|The toys are mist...|
+|    12|             Cars 2|  2011-06-24|     106|          G|Star race car Lig...|
+|    13|              Brave|  2012-06-22|      93|         PG|Determined to mak...|
+|    14|Monsters University|  2013-06-21|     104|          G|A look at the rel...|
+|    15|         Inside Out|  2015-06-19|      95|         PG|After young Riley...|
+|    16|  The Good Dinosaur|  2015-11-25|      93|         PG|In a world where ...|
+|    17|       Finding Dory|  2016-06-17|      97|         PG|Friendly but forg...|
+|    18|             Cars 3|  2017-06-16|     102|          G|Lightning McQueen...|
+|    19|               Coco|  2017-11-22|     105|         PG|Aspiring musician...|
+|    20|      Incredibles 2|  2018-06-15|     118|         PG|The Incredibles f...|
+|    21|        Toy Story 4|  2019-06-21|     100|          G|When a new toy ca...|
+|    22|             Onward|  2020-03-06|     102|         PG|Teenage elf broth...|
+|    23|               Soul|  2020-12-25|     100|         PG|Joe is a middle-s...|
+|    24|               Luca|  2021-06-18|      95|         PG|On the Italian Ri...|
+|    25|        Turning Red|  2022-03-11|     100|         PG|A thirteen-year-o...|
+|    26|          Lightyear|  2022-06-17|     105|         PG|While spending ye...|
+|    27|          Elemental|  2023-06-16|     101|         PG|Follows Ember and...|
+|    28|       Inside Out 2|  2024-06-14|      96|         PG|A sequel that fea...|
++------+-------------------+------------+--------+-----------+--------------------+

@@ -1,0 +1,154 @@
+# version: '3.1'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    hostname: mysql
+    restart: always
+    env_file:
+      - envs/mysql.env
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./dataset:/var/lib/mysql-files
+      - ./init_db_scripts:/docker-entrypoint-initdb.d
+    command: --local_infile=1
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - my-network
+  
+  zookeeper:
+    image: quay.io/debezium/zookeeper:3.0
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - 2181:2181
+      - 2888:2888
+      - 3888:3888
+    networks:
+      - my-network
+
+  kafka:
+    image: quay.io/debezium/kafka:3.0
+    hostname: kafka
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+    env_file:
+      - envs/kafka.env
+    networks:
+      - my-network
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    depends_on:
+      - kafka
+    ports:
+      - 9089:8080
+    env_file:
+      - envs/kafka.env
+    networks:
+      - my-network
+
+  minio:
+    image: quay.io/minio/minio
+    hostname: minio
+    container_name: minio
+    ports:
+     - 9000:9000
+     - 9001:9001
+    env_file:
+      - envs/minio.env
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - my-network  
+  
+  connector:
+    # image: quay.io/debezium/connect:3.0
+    build:
+      context: ./connector
+      dockerfile: ./Dockerfile
+    container_name: connector
+    depends_on:
+      - kafka
+      - mysql
+      - minio
+    ports:
+      - 8083:8083
+    env_file:
+      - envs/connector.env
+    volumes:
+      - connector_data:/kafka/connect
+    networks:
+      - my-network
+
+  spark-master:
+    build: 
+      context: ./spark
+      dockerfile: ./Dockerfile
+    container_name: spark-master
+    env_file:
+      - envs/spark-master.env
+    ports:
+      - 7077:7077
+      - 8080:8080
+    volumes:
+      - ./spark/stream.py:/app/stream.py
+      - ./spark/stream.log:/app/stream.log
+      - ./spark/src:/app/src
+      - ./spark/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf
+    depends_on:
+      - connector
+      - hive-metastore
+    networks:
+      - my-network
+
+  spark-worker:
+    image: docker.io/bitnami/spark:3.5
+    container_name: spark-worker
+    env_file:
+      - envs/spark-worker.env
+    volumes:
+      - ./spark/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf
+    depends_on:
+      - spark-master
+    networks:
+      - my-network
+    
+  hive-metastore:
+    hostname: hive-metastore
+    image: bitsondatadev/hive-metastore:latest
+    ports:
+      - 9083:9083
+    volumes:
+      - ./metastore-site.xml:/opt/apache-hive-metastore-3.0.0-bin/conf/metastore-site.xml:ro
+    environment:
+      METASTORE_DB_HOSTNAME: mysql
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - my-network
+
+
+volumes:
+  mysql_data:
+  minio_data:
+  connector_data:
+  # hive_data:
+  # connect_data:
+
+networks:
+  my-network:
+    driver: bridge
