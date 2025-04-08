@@ -1,9 +1,4 @@
-import time
-import logging
 from pyspark.sql import SparkSession
-from pyspark.sql import functions as f
-from pyspark.sql.types import *
-from pyspark.sql.window import Window
 from minio import Minio
 from minio.error import S3Error
 
@@ -12,10 +7,13 @@ SPARK = SparkSession.builder \
         .appName("SpakApp") \
         .getOrCreate()
 
-BUCKET_NAME = "warehouse"
+BUCKET_NAME = "pixarfilms"
 
-DELTA_PATH = f"s3a://{BUCKET_NAME}/films"
-CHECKPOINT_PATH = f"s3a://{BUCKET_NAME}/checkpoints"
+WAREHOUSE_PATH = f"s3a://{BUCKET_NAME}"
+DATABASE_NAME = "default"
+TABLE_NAME = "films"
+
+SINK_TABLE = f"{DATABASE_NAME}.{TABLE_NAME}"
 
 MINIO_CONFIG = {
     "endpoint": "minio:9000",
@@ -58,29 +56,8 @@ def create_bucket():
         print(f"OTHER ERROR WHILE CREATING NEW BUCKET {str(e)}")
         raise
 
-def full_load():
-    pass
-
-def main():
-    create_bucket()
-    print(SPARK.conf.get("spark.sql.catalog.spark_catalog"))
-    print(SPARK.conf.get("spark.sql.catalog.spark_catalog.type"))
-    print(SPARK.conf.get("spark.sql.catalog.spark_catalog.uri"))
-
-    df = read_from_mysql()
-    df.printSchema()
-    df.show(40)
-
-    # df.writeTo("spark_catalog.default.films") \
-    # .createOrReplace()
-
-    # df.write \
-    # .format("iceberg") \
-    # .mode("overwrite") \
-    # .save("my_catalog.warehouse.films")
-
-    SPARK.sql("""
-        CREATE OR REPLACE TABLE spark_catalog.default.films (
+    SPARK.sql(f"""
+        CREATE TABLE IF NOT EXISTS spark_catalog.{SINK_TABLE} (
             number INT,
             film STRING,
             release_date DATE,
@@ -88,16 +65,22 @@ def main():
             film_rating STRING,
             plot STRING
         ) USING iceberg
-        LOCATION 's3a://warehouse/default/films'
+        LOCATION '{WAREHOUSE_PATH}/{TABLE_NAME}'
         """)
 
-# Then append data
-    df.write.format("iceberg").mode("append").saveAsTable("spark_catalog.default.films")
+def main():
+    create_bucket()
 
-    SPARK.sql("SELECT * FROM spark_catalog.default.films").show(40)
+    df = read_from_mysql()
+
+    df.printSchema()
+    df.show(40)
+
+    df.write.format("iceberg").mode("append").saveAsTable(f"spark_catalog.{SINK_TABLE}")
+
+    SPARK.sql(f"SELECT * FROM spark_catalog.{SINK_TABLE}").show(40)
 
     SPARK.stop()
     
-
 if __name__ == "__main__":
     main()

@@ -62,3 +62,6 @@ protobuf java
 
 iceberg hive metastore
 iceberg api
+caffein
+error prone annotation
+checker qual

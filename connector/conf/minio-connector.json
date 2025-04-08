@@ -4,7 +4,7 @@
       "connector.class": "io.confluent.connect.s3.S3SinkConnector",
       "tasks.max": "1",
       "topics": "dbserver1.pixar_films.films",
-      "s3.bucket.name": "pixarfilmskafka",
+      "s3.bucket.name": "incpixarfilms",
       "store.url": "http://minio:9000",
       "s3.access.key": "minio",
       "s3.secret.key": "minio123",

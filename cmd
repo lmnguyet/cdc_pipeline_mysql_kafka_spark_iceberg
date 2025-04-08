@@ -4,6 +4,12 @@ docker exec -it mysql mysql -u lminhnguyet -p -D pixar_films
 show tables;
 select * from films;
 
+INSERT INTO films VALUES (29, 'Inside Out 3', '2025-04-08', 90, 'PG', '');
+INSERT INTO films VALUES (30, 'Inside Out 4', '2025-04-08', 100, 'PG', '');
+INSERT INTO films VALUES (31, 'Inside Out 5', '2025-04-08', 120, 'PG', '');
+UPDATE films SET run_time=95 WHERE film='Inside Out 5';
+DELETE FROM films WHERE film='Inside Out 5';
+
 docker exec -it minio bash -c "mc alias set minio http://minio:9000 minio minio123 && mc mb minio/pixarfilmskafka"
 
 curl -H "Accept:application/json" localhost:8083/connectors/
@@ -16,6 +22,7 @@ docker exec -it kafka bash -c "bin/kafka-consumer-groups.sh --bootstrap-server k
 docker exec -it spark-master bash
 
 spark-submit /app/src/full_load.py
+spark-submit /app/src/incremental_load.py
 
 docker exec -u root -it spark-master bin/spark-submit /app/stream.py
 
