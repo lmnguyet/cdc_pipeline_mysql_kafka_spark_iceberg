@@ -138,6 +138,9 @@ services:
       - 8081:8080
     volumes:
       - ./trino:/etc/trino
+    depends_on:
+      - hive-metastore
+      - minio
     networks:
       - my-network
 
