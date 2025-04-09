@@ -61,6 +61,7 @@ mysql connector java
 protobuf java
 
 iceberg hive metastore
+iceberg hive runtime
 iceberg api
 caffein
 error prone annotation

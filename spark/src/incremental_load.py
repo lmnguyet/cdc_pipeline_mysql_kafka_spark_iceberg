@@ -12,7 +12,6 @@ from minio.error import S3Error
 SPARK = SparkSession.builder \
         .appName("SpakApp") \
         .getOrCreate()
-        # .config("spark.jars.packages", "org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.8.0,org.apache.iceberg:iceberg-hive-metastore:1.8.0") \
 
 SINK_BUCKET_NAME = "pixarfilms"
 SOURCE_BUCKET_NAME = "incpixarfilms"
@@ -46,51 +45,31 @@ def read_upsert():
     
     processed_df = processed_df.filter(f.col("row_num") == 1).drop("row_num", "ts_ms")
 
-    upsert_df = processed_df.filter(f.col("op") != "d").drop("op")
-    delete_df = processed_df.filter(f.col("op") == "d").drop("op")
-    return upsert_df, delete_df
+    return processed_df
 
-def merge(upsert_df, delete_df, key_column="number"):
-    upsert_df.createOrReplaceTempView("updates")
+def merge(upsert_df, key_column="number"):
+    upsert_df.createOrReplaceTempView("upserts")
 
     SPARK.sql(f"""
         MERGE INTO spark_catalog.{SINK_TABLE} target
-        USING (SELECT * FROM updates) source
+        USING (
+            SELECT number, film, release_date, run_time, film_rating, plot, op
+            FROM upserts
+        ) source
         ON target.{key_column} = source.{key_column}
-        WHEN MATCHED THEN UPDATE SET *
-        WHEN NOT MATCHED THEN INSERT *
-    """)
-    
-    delete_df.createOrReplaceTempView("deletes")
-
-    SPARK.sql(f"""
-        MERGE INTO spark_catalog.{SINK_TABLE} target
-        USING (SELECT * FROM deletes) source
-        ON target.{key_column} = source.{key_column}
-        WHEN MATCHED THEN DELETE
+        WHEN MATCHED AND source.op = 'd' THEN DELETE
+        WHEN MATCHED AND source.op <> 'd' THEN UPDATE SET *
+        WHEN NOT MATCHED AND source.op <> 'd' THEN INSERT *
     """)
 
 def main():
-    upsert_df, delete_df = read_upsert()
-
-    upsert_df.show(40)
-    upsert_df.printSchema()
-    delete_df.show(40)
-    delete_df.printSchema()
+    processed_df = read_upsert()
 
     SPARK.sql(f"SELECT * FROM spark_catalog.{SINK_TABLE}").show(40)
 
-    merge(upsert_df, delete_df)
+    merge(processed_df)
 
     SPARK.sql(f"SELECT * FROM spark_catalog.{SINK_TABLE}").show(40)
-
-    # try:
-    #     df = SPARK.sql(f"SELECT * FROM spark_catalog.{SINK_TABLE}")
-    #     df.printSchema()
-    #     df.show(40)
-    # except Exception as e:
-    #     import traceback
-    #     traceback.print_exc()
 
     SPARK.stop()
 

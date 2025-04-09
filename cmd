@@ -1,14 +1,28 @@
 
 ===============================================================MAIN======================================================================
+source: mysql 8.0
+
+zookeeper & kafka
+
+debezium + kafka-connect-s3 connector
+
+hive metastore + mysql + s3 storage
+
+spark + s3 libraries + hive libraries + iceberg libraries
+
+=========================================================================================================================================
 docker exec -it mysql mysql -u lminhnguyet -p -D pixar_films
 show tables;
 select * from films;
+
+docker exec -i mysql mysql -ulminhnguyet -p123 pixar_films < ./cdc.sql
 
 INSERT INTO films VALUES (29, 'Inside Out 3', '2025-04-08', 90, 'PG', '');
 INSERT INTO films VALUES (30, 'Inside Out 4', '2025-04-08', 100, 'PG', '');
 INSERT INTO films VALUES (31, 'Inside Out 5', '2025-04-08', 120, 'PG', '');
 UPDATE films SET run_time=95 WHERE film='Inside Out 5';
 DELETE FROM films WHERE film='Inside Out 5';
+UPDATE films SET plot='This is the final season of Inside Out' WHERE film='Inside Out 5';
 
 docker exec -it minio bash -c "mc alias set minio http://minio:9000 minio minio123 && mc mb minio/pixarfilmskafka"
 
@@ -17,11 +31,13 @@ curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" 
 curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d @connector/conf/minio-connector.json
 curl -X DELETE localhost:8083/connectors/minio-connector
 
+
 docker exec -it kafka bash -c "bin/kafka-consumer-groups.sh --bootstrap-server kafka:9092 --group connect-minio-connector --delete"
 
 docker exec -it spark-master bash
 
 spark-submit /app/src/full_load.py
+spark-submit /app/src/incremental_load.py
 spark-submit /app/src/incremental_load.py
 
 docker exec -u root -it spark-master bin/spark-submit /app/stream.py
