@@ -130,6 +130,17 @@ services:
     networks:
       - my-network
 
+  trino:
+    hostname: trino
+    image: trinodb/trino:388
+    container_name: trino
+    ports:
+      - 8081:8080
+    volumes:
+      - ./trino:/etc/trino
+    networks:
+      - my-network
+
 
 volumes:
   mysql_data:
