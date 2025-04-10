@@ -38,7 +38,7 @@ docker exec -it spark-master bash
 
 spark-submit /app/src/full_load.py
 spark-submit /app/src/incremental_load.py
-spark-submit /app/src/incremental_load.py
+spark-submit --packages org.apache.iceberg:iceberg-hive-metastore:1.6.1,org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.6.1 /app/src/incremental_load.py
 
 docker exec -u root -it spark-master bin/spark-submit /app/stream.py
 

@@ -12,6 +12,7 @@ from minio.error import S3Error
 SPARK = SparkSession.builder \
         .appName("SpakApp") \
         .getOrCreate()
+        # .config("spark.jars.packages", "org.apache.iceberg:iceberg-hive-metastore:1.6.1,org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.6.1") \
 
 SINK_BUCKET_NAME = "pixarfilms"
 SOURCE_BUCKET_NAME = "incpixarfilms"
@@ -65,7 +66,13 @@ def merge(upsert_df, key_column="number"):
 def main():
     processed_df = read_upsert()
 
+    processed_df.show()
+
     SPARK.sql(f"SELECT * FROM spark_catalog.{SINK_TABLE}").show(40)
+
+    # Trong PySpark
+    print("Loaded Jackson:", SPARK._jvm.com.fasterxml.jackson.databind.ObjectMapper().getClass())
+    print("Iceberg Shaded Jackson:", SPARK._jvm.org.apache.iceberg.shaded.com.fasterxml.jackson.databind.ObjectMapper().getClass())
 
     merge(processed_df)
 

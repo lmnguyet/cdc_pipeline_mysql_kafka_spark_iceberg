@@ -12,9 +12,9 @@ org.apache.commons:commons-pool2:2.11.1
 
 com.google.code.findbugs:jsr305:3.0.0
 
-org.lz4:lz4-java:1.8.0
+org.lz4:lz4-java:1.8.0 x
 
-org.slf4j:slf4j-api:2.0.17
+org.slf4j:slf4j-api:2.0.17 x
 
 org.xerial:snappy-java:1.1.10.3
 
