@@ -34,7 +34,7 @@ curl -X DELETE localhost:8083/connectors/minio-connector
 
 docker exec -it kafka bash -c "bin/kafka-consumer-groups.sh --bootstrap-server kafka:9092 --group connect-minio-connector --delete"
 
-docker exec -it spark-master bash
+docker exec -it spark-master spark-submit /app/src/incremental_load.py
 
 spark-submit /app/src/full_load.py
 spark-submit /app/src/incremental_load.py
