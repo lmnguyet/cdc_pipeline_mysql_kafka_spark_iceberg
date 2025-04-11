@@ -3,7 +3,7 @@
     "config": {
       "connector.class": "io.confluent.connect.s3.S3SinkConnector",
       "tasks.max": "1",
-      "topics": "dbserver1.pixar_films.films",
+      "topics": "dbserver1.pixar_films.films, dbserver1.pixar_films.film_ratings, dbserver1.pixar_films.genres, dbserver1.pixar_films.box_office",
       "s3.bucket.name": "incpixarfilms",
       "store.url": "http://minio:9000",
       "s3.access.key": "minio",
