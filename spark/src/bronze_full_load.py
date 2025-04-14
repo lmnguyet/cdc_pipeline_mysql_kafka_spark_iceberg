@@ -1,4 +1,5 @@
 from pyspark.sql import SparkSession
+from pyspark.sql import functions as f
 from minio import Minio
 from minio.error import S3Error
 
@@ -7,37 +8,78 @@ SPARK = SparkSession.builder \
         .appName("SpakApp") \
         .getOrCreate()
 
-BUCKET_NAME = "pixarfilms"
+# source config
+MYSQL_CONFIG = {
+    "host": "mysql",
+    "port": "3306",
+    "database": "pixar_films",
+    "tables": ["films", "film_ratings", "genres", "box_office"],
+    "user": "lminhnguyet",
+    "password": "123"
+}
 
-WAREHOUSE_PATH = f"s3a://{BUCKET_NAME}"
-DATABASE_NAME = "default"
-TABLE_NAME = "films"
-
-SINK_TABLE = f"{DATABASE_NAME}.{TABLE_NAME}"
-
+# sink config
 MINIO_CONFIG = {
     "endpoint": "minio:9000",
     "access_key": "minio",
     "secret_key": "minio123"
 }
 
-MYSQL_CONFIG = {
-    "host": "mysql",
-    "port": "3306",
-    "database": "pixar_films",
-    "table": "films",
-    "user": "lminhnguyet",
-    "password": "123"
+BUCKET_NAME = "pixarfilms"
+WAREHOUSE_PATH = f"s3a://{BUCKET_NAME}"
+LAYER_NAME = "bronze"
+
+DATABASE_NAME = "spark_catalog.default"
+
+SCHEMAS = {
+    "brz_films" : """
+        number INT NOT NULL,
+        film STRING,
+        release_date DATE,
+        run_time INT,
+        film_rating STRING,
+        plot STRING,
+        sequence_number INT
+    """,
+    "brz_film_ratings": """
+        film STRING NOT NULL,
+        rotten_tomatoes_score INT,
+        rotten_tomatoes_counts INT,
+        metacritic_score INT,
+        metacritic_counts INT,
+        cinema_score STRING,
+        imdb_score DECIMAL(3,1),
+        imdb_counts INT,
+        sequence_number INT
+    """,
+    "brz_genres": """
+        film STRING NOT NULL,
+        category STRING,
+        value STRING,
+        sequence_number INT
+    """, 
+    "brz_box_office": """
+        film STRING NOT NULL,
+        budget INT,
+        box_office_us_canada INT,
+        box_office_other INT,
+        box_office_worldwide INT,
+        sequence_number INT
+    """
 }
 
-def read_from_mysql():
+# SINK_TABLE = f"{DATABASE_NAME}.{TABLE_NAME}"
+
+def read_from_mysql(table_name="films"):
     df = SPARK.read \
     .format("jdbc") \
     .option("url", f"jdbc:mysql://{MYSQL_CONFIG["host"]}:{MYSQL_CONFIG["port"]}/{MYSQL_CONFIG["database"]}") \
-    .option("dbtable", MYSQL_CONFIG["table"]) \
+    .option("dbtable", table_name) \
     .option("user", MYSQL_CONFIG["user"]) \
     .option("password", MYSQL_CONFIG["password"]) \
     .load()
+    
+    df = df.withColumn("sequence_number", f.lit(0))
     return df
 
 def create_bucket():
@@ -56,29 +98,29 @@ def create_bucket():
         print(f"OTHER ERROR WHILE CREATING NEW BUCKET {str(e)}")
         raise
 
-    SPARK.sql(f"""
-        CREATE TABLE IF NOT EXISTS spark_catalog.{SINK_TABLE} (
-            number INT,
-            film STRING,
-            release_date DATE,
-            run_time INT,
-            film_rating STRING,
-            plot STRING
-        ) USING iceberg
-        LOCATION '{WAREHOUSE_PATH}/{TABLE_NAME}'
-        """)
+    for table_name in SCHEMAS.keys():
+        SPARK.sql(f"""
+            CREATE TABLE IF NOT EXISTS {DATABASE_NAME}.{table_name} (
+                {SCHEMAS[table_name]}
+            ) USING iceberg
+            LOCATION '{WAREHOUSE_PATH}/{LAYER_NAME}/{table_name[4:]}'
+            """)
 
 def main():
     create_bucket()
 
-    df = read_from_mysql()
+    for src_table in MYSQL_CONFIG["tables"]:
+        print(f"===== FULL LOADING TABLE brz_{src_table} =====")
+        df = read_from_mysql(src_table)
 
-    df.printSchema()
-    df.show(40)
+        df.printSchema()
+        df.show(40)
 
-    df.write.format("iceberg").mode("append").saveAsTable(f"spark_catalog.{SINK_TABLE}")
+        # if src_table != "films":
+        df.write.format("iceberg").mode("append").saveAsTable(f"{DATABASE_NAME}.brz_{src_table}")
 
-    SPARK.sql(f"SELECT * FROM spark_catalog.{SINK_TABLE}").show(40)
+        print(f"===== FULL LOADED TABLE brz_{src_table} =====")
+        SPARK.sql(f"SELECT * FROM {DATABASE_NAME}.brz_{src_table}").show(40)
 
     SPARK.stop()
     
