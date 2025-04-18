@@ -1,5 +1,3 @@
-# version: '3.1'
-
 services:
   mysql:
     image: mysql:8.0
@@ -85,6 +83,21 @@ services:
     networks:
       - my-network
 
+  hive-metastore:
+    hostname: hive-metastore
+    container_name: hive-metastore
+    image: bitsondatadev/hive-metastore:latest
+    ports:
+      - 9083:9083
+    volumes:
+      - ./hive/metastore-site.xml:/opt/apache-hive-metastore-3.0.0-bin/conf/metastore-site.xml:ro
+    environment:
+      METASTORE_DB_HOSTNAME: mysql
+    depends_on:
+      - mysql
+    networks:
+      - my-network
+
   spark-master:
     build: 
       context: ./spark
@@ -96,11 +109,11 @@ services:
       - 7077:7077
       - 8080:8080
     volumes:
-      - ./spark/src:/app/src
+      - ./spark/jobs:/opt/bitnami/spark/jobs
       - ./spark/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf
-    depends_on:
-      - connector
-      - hive-metastore
+    # depends_on:
+    #   - connector
+    #   - hive-metastore
     networks:
       - my-network
 
@@ -113,20 +126,6 @@ services:
       - ./spark/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf
     depends_on:
       - spark-master
-    networks:
-      - my-network
-    
-  hive-metastore:
-    hostname: hive-metastore
-    image: bitsondatadev/hive-metastore:latest
-    ports:
-      - 9083:9083
-    volumes:
-      - ./hive/metastore-site.xml:/opt/apache-hive-metastore-3.0.0-bin/conf/metastore-site.xml:ro
-    environment:
-      METASTORE_DB_HOSTNAME: mysql
-    depends_on:
-      - mysql
     networks:
       - my-network
 
@@ -144,11 +143,12 @@ services:
     networks:
       - my-network
 
-
 volumes:
   mysql_data:
   minio_data:
 
 networks:
   my-network:
+    external: true
     driver: bridge
+    name: my-network

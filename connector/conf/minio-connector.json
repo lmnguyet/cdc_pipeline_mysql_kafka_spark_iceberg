@@ -29,7 +29,7 @@
       "partitioner.class": "io.confluent.connect.storage.partitioner.TimeBasedPartitioner",
       "path.format": "yyyy-MM-dd",
       "timestamp.extractor": "Record",
-      "timestamp.field": "payload.ts_ms",
+      "timestamp.field": "payload.source.ts_ms",
       "locale": "en-US",
       "timezone": "Asia/Ho_Chi_Minh",
       "partition.duration.ms": "86400000"

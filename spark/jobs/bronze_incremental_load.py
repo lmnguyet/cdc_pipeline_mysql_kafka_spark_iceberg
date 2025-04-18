@@ -17,7 +17,7 @@ TOPIC_PREFIX = "dbserver1.pixar_films"
 TOPIC_NAMES = ["films", "film_ratings", "genres", "box_office"]
 
 UPSERT_DATE = datetime.now().strftime('%Y-%m-%d')
-UPSERT_DATE = datetime.now().strftime('%Y-%m-%d')
+# UPSERT_DATE = datetime.now().strftime('%Y-%m-%d')
 # SOURCE_PATH = f"s3a://{SOURCE_BUCKET_NAME}/topics/{TOPIC_NAME}/{UPSERT_DATE}/*.json"
 
 # sink config

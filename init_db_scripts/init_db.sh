@@ -3,7 +3,9 @@ echo "Importing CSV into MySQL..."
 
 mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "
 CREATE DATABASE IF NOT EXISTS metastore;
+CREATE DATABASE IF NOT EXISTS airflow;
 GRANT ALL PRIVILEGES ON metastore.* TO 'lminhnguyet'@'%';
+GRANT ALL PRIVILEGES ON airflow.* TO 'lminhnguyet'@'%';
 FLUSH PRIVILEGES;
 USE $MYSQL_DATABASE;
 CREATE TABLE films (

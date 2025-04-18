@@ -2,3 +2,7 @@ dataset/
 mysql/
 .env
 draft
+airflow/config
+airflow/plugins
+airflow/logs
+airflow/dags/__pycache__
