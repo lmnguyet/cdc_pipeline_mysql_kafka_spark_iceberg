@@ -109,11 +109,15 @@ services:
       - 7077:7077
       - 8080:8080
     volumes:
-      - ./spark/jobs:/opt/bitnami/spark/jobs
-      - ./spark/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf
+      - ./spark/spark-defaults.conf:/tmp/spark-defaults.conf
+      - ./spark/jobs:/tmp/jobs
+      - spark_home:/opt/bitnami/spark
+      # - ./spark/jobs:/opt/bitnami/spark/jobs
+      # - ./spark/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf
     # depends_on:
     #   - connector
     #   - hive-metastore
+    entrypoint: bash -c "cp /tmp/spark-defaults.conf /opt/bitnami/spark/conf/spark-defaults.conf && cp -r /tmp/jobs /opt/bitnami/spark/ && /opt/bitnami/spark/sbin/start-master.sh && tail -f /dev/null"
     networks:
       - my-network
 
@@ -143,9 +147,39 @@ services:
     networks:
       - my-network
 
+  superset:
+    image: superset-img
+    container_name: superset
+    env_file:
+      - envs/superset.env
+    ports:
+      - 8088:8088
+    volumes:
+      - ./superset/superset-init.sh:/app/superset-init.sh
+    depends_on:
+      - trino
+    networks:
+      - my-network 
+  
+  fast-api:
+    image: fastapi-img
+    container_name: fast-api
+    env_file:
+      - envs/fastapi.env
+    ports:
+      - 8000:8000
+    volumes:
+      - ./fastapi/app/main.py:/app/main.py
+    depends_on:
+      - trino
+    networks:
+      - my-network
+
 volumes:
   mysql_data:
   minio_data:
+  spark_home:
+    external: true
 
 networks:
   my-network:

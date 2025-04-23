@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta
+import pendulum
 from airflow import DAG
 from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
 
 default_args = {
     'owner': 'airflow',
-    'start_date': datetime(2025, 4, 1),
-    'retries': 1,
+    'start_date': datetime(2025, 4, 1, 23, 0, tzinfo=pendulum.timezone("Asia/Ho_Chi_Minh")),
+    'retries': 5,
     'retry_delay': timedelta(minutes=5),
 }
 
@@ -13,7 +14,7 @@ dag = DAG(
     'daily_dag',
     default_args=default_args,
     catchup=False,
-    schedule_interval='0 0 * * *'
+    schedule_interval='0 23 * * *'
 )
 
 bronze_incremental_loading_job = SparkSubmitOperator(
@@ -22,12 +23,16 @@ bronze_incremental_loading_job = SparkSubmitOperator(
     conn_id='spark-conn',
     verbose=False,
     dag=dag,
-    name='bronze_incremental_load',
-    conf={
-        "spark.sql.catalog.spark_catalog": "org.apache.iceberg.spark.SparkCatalog",
-        "spark.sql.catalog.spark_catalog.type": "hive",
-        "spark.jars": "/opt/airflow/jars/*"
-    }
+    name='bronze_incremental_load'
 )
 
-bronze_incremental_loading_job
+silver_loading_job = SparkSubmitOperator(
+    task_id='silver_load',
+    application='jobs/silver_load.py',
+    conn_id='spark-conn',
+    verbose=False,
+    dag=dag,
+    name='silver_load'
+)
+
+bronze_incremental_loading_job >> silver_loading_job

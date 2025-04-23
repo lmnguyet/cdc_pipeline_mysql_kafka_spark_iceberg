@@ -6,3 +6,5 @@ airflow/config
 airflow/plugins
 airflow/logs
 airflow/dags/__pycache__
+spark/home
+bulk_import.json

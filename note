@@ -1,4 +1,5 @@
 DOCKER COMPOSE
+docker network create my-network
 1. mysql 8.0
 - tạo user chính dùng trong project: lminhnguyet - 123
 - tạo các db cần dùng
@@ -37,10 +38,19 @@ DOCKER COMPOSE
 8. spark-master (spark 3.5 python 3.12)
 ** thứ tự 3, depend minio, hive-metastore
 ** port 8080
+docker volume create spark_home
 
 9. spark-worker
 ** thứ tự 4, depend spark-master
 
 10. airflow (jdk 17 pyspark 3.5 python 3.12)
 ** thứ tự 5
+docker build -t airflow-img:2.9 ./airflow
+docker compose -f docker-compose.airflow.yml up -d airflow-init
+create spark-conn << airflow-webserver
 
+11. superset
+docker build -t superset-img ./superset
+
+12. fastapi
+docker build -t fastapi-img ./fastapi

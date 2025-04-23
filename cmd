@@ -40,6 +40,46 @@ spark-submit /app/src/bronze_full_load.py
 spark-submit /app/src/bronze_incremental_load.py
 spark-submit /app/src/silver_load.py
 
+docker compose -f docker-compose.airflow.yml start
+docker compose start mysql minio hive-metastore trino fast-api spark-master spark-worker
+docker compose -f docker-compose.airflow.yml up -d airflow-webserver airflow-scheduler
+
+docker run -d --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "xpack.security.enabled=false" elasticsearch:8.18.0
+
+trino://trino:@trino:8080/iceberg
+
+curl -X POST "http://localhost:8000/query" \
+-H "Content-Type: application/json" \
+-d '{
+    "sql": "SELECT d.film, f.budget FROM iceberg.default.slv_dim_films d INNER JOIN iceberg.default.slv_fact_box_office f on d.id = f.id ORDER BY f.budget DESC"
+}' | jq
+
+jq -c '{ 
+  "index": {
+    "_index": ._index,
+    "_id": ._id
+  }
+}, ._source' /mnt/c/Users/lminhnguyet/Downloads/part-00000-tid-1500210561779641383-45ad375e-3ed7-4d87-b553-88921779b6c3-440-1-c000.json > bulk_import.json
+
+curl -X POST "http://localhost:9200/_bulk" \
+-H "Content-Type: application/x-ndjson" \
+--data-binary "@bulk_import.json"
+
+curl -X GET "http://localhost:9200/students/_count"
+
+curl -X GET "http://localhost:9200/students/_search?size=5&pretty"
+
+curl -X GET "http://localhost:9200/students/_search?pretty" \
+-H 'Content-Type: application/json' \
+-d '{
+  "query": {
+    "match": {
+      "groups_name_with_format": "Group 1k"
+    }
+  }
+}'
+
+
 ==========AIRFLOW=====================
 export AIRFLOW_UID=$(id -u)
 

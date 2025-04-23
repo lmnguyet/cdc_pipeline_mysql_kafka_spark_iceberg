@@ -5,6 +5,7 @@ from pyspark.sql.types import *
 from pyspark.sql.window import Window
 from minio import Minio
 from minio.error import S3Error
+import pytz
 
 # create spark session
 SPARK = SparkSession.builder \
@@ -16,8 +17,8 @@ SOURCE_BUCKET_NAME = "incpixarfilms"
 TOPIC_PREFIX = "dbserver1.pixar_films"
 TOPIC_NAMES = ["films", "film_ratings", "genres", "box_office"]
 
-UPSERT_DATE = datetime.now().strftime('%Y-%m-%d')
-# UPSERT_DATE = datetime.now().strftime('%Y-%m-%d')
+UPSERT_DATE = datetime.now(pytz.timezone("Asia/Ho_Chi_Minh")).strftime('%Y-%m-%d')
+# UPSERT_DATE = "2025-04-14"
 # SOURCE_PATH = f"s3a://{SOURCE_BUCKET_NAME}/topics/{TOPIC_NAME}/{UPSERT_DATE}/*.json"
 
 # sink config
@@ -31,15 +32,6 @@ TABLE_KEYS = {
     "brz_genres": ["film", "value"], 
     "brz_box_office": ["film"]
 }
-
-def generate_schema_str(sink_schema):
-    schema_str = ["StructType(["]
-    for field in sink_schema.fields:
-        schema_str.append(
-            f'StructField("{field.name}", {field.dataType.__class__.__name__}(), {field.nullable}),'
-        )
-    schema_str.append("])")
-    return "\n".join(schema_str)
 
 def read_upsert(src_table, sink_table, key_columns=["number"]):
     sink_df = SPARK.sql(f"SELECT * FROM {DATABASE_NAME}.{sink_table}")
@@ -120,13 +112,15 @@ def main():
             print(f"===== NOTHING TO MERGE ON TABLE {table}, SKIPPED =====")
             continue
 
-        processed_df.show()
+        # processed_df.show()
 
-        SPARK.sql(f"SELECT * FROM {DATABASE_NAME}.{table}").show(40)
+        processed_df.printSchema()
+
+        # SPARK.sql(f"SELECT * FROM {DATABASE_NAME}.{table}").show(40)
 
         merge(processed_df, table, TABLE_KEYS[table])
 
-        SPARK.sql(f"SELECT * FROM {DATABASE_NAME}.{table}").show(40)
+        # SPARK.sql(f"SELECT * FROM {DATABASE_NAME}.{table}").show(40)
 
         print(f"===== FINISHED MERGING TABLE {table} =====")
 
