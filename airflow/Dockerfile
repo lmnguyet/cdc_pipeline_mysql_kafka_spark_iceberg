@@ -9,6 +9,6 @@ RUN rm -rf /var/lib/apt/lists/*
 USER airflow
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 
-RUN pip install pyspark==3.5.5 apache-airflow-providers-apache-spark minio
+RUN pip install apache-airflow-providers-apache-spark minio
 
 

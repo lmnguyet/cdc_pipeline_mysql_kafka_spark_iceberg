@@ -154,8 +154,6 @@ services:
       - envs/superset.env
     ports:
       - 8088:8088
-    volumes:
-      - ./superset/superset-init.sh:/app/superset-init.sh
     depends_on:
       - trino
     networks:

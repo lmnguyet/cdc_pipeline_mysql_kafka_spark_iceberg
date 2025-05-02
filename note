@@ -43,14 +43,32 @@ docker volume create spark_home
 9. spark-worker
 ** thứ tự 4, depend spark-master
 
-10. airflow (jdk 17 pyspark 3.5 python 3.12)
+10. airflow (jdk 17 python 3.12 airflow minio)
 ** thứ tự 5
+** port 18080
 docker build -t airflow-img:2.9 ./airflow
+export AIRFLOW_UID=$(id -u)
 docker compose -f docker-compose.airflow.yml up -d airflow-init
-create spark-conn << airflow-webserver
+create spark-conn connect to sparl-master on airflow-webserver:
+- host: spark://spark-master
+- port: 7077
+- deploy mode: client
+mount spark_home from spark-master to airflow
 
 11. superset
+** port 8088
 docker build -t superset-img ./superset
+create database connect to trino: trino://trino:@trino:8080/iceberg
+create dataset query from database
 
 12. fastapi
+** port 8000
 docker build -t fastapi-img ./fastapi
+
+curl -X POST "http://localhost:8000/query" \
+-H "Content-Type: application/json" \
+-d '{
+    "sql": <Your SQL query>
+}' | jq
+
+=== relist ports of containers

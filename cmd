@@ -10,6 +10,8 @@ hive metastore + mysql + s3 storage
 
 spark + s3 libraries + hive libraries + iceberg libraries
 
+PIP INSTALL pyiceberg => spark, airflow
+
 =========================================================================================================================================
 docker exec -it mysql mysql -u lminhnguyet -p -D pixar_films
 show tables;
@@ -44,7 +46,7 @@ docker compose -f docker-compose.airflow.yml start
 docker compose start mysql minio hive-metastore trino fast-api spark-master spark-worker
 docker compose -f docker-compose.airflow.yml up -d airflow-webserver airflow-scheduler
 
-docker run -d --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "xpack.security.enabled=false" elasticsearch:8.18.0
+docker run -d --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "xpack.security.enabled=false" elasticsearch:6.8.13
 
 trino://trino:@trino:8080/iceberg
 
@@ -54,16 +56,20 @@ curl -X POST "http://localhost:8000/query" \
     "sql": "SELECT d.film, f.budget FROM iceberg.default.slv_dim_films d INNER JOIN iceberg.default.slv_fact_box_office f on d.id = f.id ORDER BY f.budget DESC"
 }' | jq
 
+============================
+docker start elasticsearch
+
 jq -c '{ 
   "index": {
     "_index": ._index,
-    "_id": ._id
+    "_id": ._id,
+    "_type": ._type
   }
-}, ._source' /mnt/c/Users/lminhnguyet/Downloads/part-00000-tid-1500210561779641383-45ad375e-3ed7-4d87-b553-88921779b6c3-440-1-c000.json > bulk_import.json
+}, ._source' /mnt/c/Users/lminhnguyet/Downloads/students_anonymized.json > students_import1.json
 
 curl -X POST "http://localhost:9200/_bulk" \
 -H "Content-Type: application/x-ndjson" \
---data-binary "@bulk_import.json"
+--data-binary "@students_import.json"
 
 curl -X GET "http://localhost:9200/students/_count"
 
@@ -79,6 +85,47 @@ curl -X GET "http://localhost:9200/students/_search?pretty" \
   }
 }'
 
+elasticdump \
+  --input=data.json \
+  --output=http://localhost:9200/my_index \
+  --type=data
+
+curl -XGET "http://localhost:9200/students/_search?pretty" -H 'Content-Type: application/json' -d'
+{
+  "_source": false,
+  "query": {
+    "match_all": {}
+  },
+  "sort": [
+    { "_id": "asc" }
+  ],
+  "size": 1000
+}'
+==========ELASTIC SEARCH=========================
+1. Bulk API Import 
+Phải convert file json ban đầu thành file json đúng format
+
+jq -c '{ 
+  "index": {
+    "_index": ._index,
+    "_id": ._id,
+    "_type": ._type
+  }
+}, ._source' /mnt/c/Users/lminhnguyet/Downloads/students_anonymized.json > students_import.json
+
+curl -X POST "http://localhost:9200/_bulk" \
+-H "Content-Type: application/x-ndjson" \
+--data-binary "@students_import.json"
+
+2. elasticdump import
+elasticdump --input=students_anonymized.json --output=http://localhost:9200/students --type=data
+
+3. elasdump export
+npm install -g elasticdump
+
+elasticdump --input=http://localhost:9200/students --output=students_export_bulk.json --type=data
+elasticdump --input=http://localhost:9200/students --output=students_export_dump.json --type=data
+elasticdump --input=http://localhost:9200/students --output=students_export_stash.json --type=data
 
 ==========AIRFLOW=====================
 export AIRFLOW_UID=$(id -u)
@@ -90,6 +137,20 @@ export AIRFLOW_CONN_SPARK_DEFAULT=spark://spark-master:7077
 pip uninstall -y apache-airflow
 
 ===========================================================================================================================================
+SELECT *
+FROM iceberg.default."films$snapshots"
+ORDER BY timestamp DESC;
+
+SELECT * FROM TABLE(
+  iceberg.snapshots_diff(
+    'iceberg',
+    'default',
+    'films',
+    5727751947216810520,
+    7359423397521229960
+  )
+);
+
 https://packages.confluent.io/maven/io/confluent/kafka-connect-s3/10.5.20/kafka-connect-s3-10.5.20.jar
 
 docker exec -u root -it connect bash
