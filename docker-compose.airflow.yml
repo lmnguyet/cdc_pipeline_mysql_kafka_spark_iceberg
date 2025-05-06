@@ -9,7 +9,7 @@ x-airflow-common:
     - ./airflow/config:/opt/airflow/config
     - ./airflow/plugins:/opt/airflow/plugins
     - ./spark/jobs:/opt/airflow/jobs
-    - spark_home:/opt/bitnami/spark
+    - spark_home_data:/opt/bitnami/spark
   user: "${AIRFLOW_UID:-1000}:0"
   networks:
     - my-network
@@ -58,7 +58,7 @@ services:
       - ./airflow:/sources
 
 volumes:
-  spark_home:
+  spark_home_data:
     external: true
 
 networks:

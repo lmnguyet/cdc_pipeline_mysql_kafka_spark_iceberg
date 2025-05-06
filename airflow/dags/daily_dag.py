@@ -26,13 +26,16 @@ bronze_incremental_loading_job = SparkSubmitOperator(
     name='bronze_incremental_load'
 )
 
-silver_loading_job = SparkSubmitOperator(
-    task_id='silver_load',
-    application='jobs/silver_load.py',
+silver_incremental_loading_job = SparkSubmitOperator(
+    task_id='silver_incremental_load',
+    application='jobs/silver_incremental_load.py',
     conn_id='spark-conn',
     verbose=False,
     dag=dag,
-    name='silver_load'
+    name='silver_incremental_load',
+    application_args=[
+        "--tables", "slv_dim_films,slv_dim_genres,slv_fact_film_ratings,slv_fact_film_genres,slv_fact_box_office"
+    ]
 )
 
-bronze_incremental_loading_job >> silver_loading_job
+bronze_incremental_loading_job >> silver_incremental_loading_job

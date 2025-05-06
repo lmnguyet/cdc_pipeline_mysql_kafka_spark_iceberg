@@ -1,0 +1,23 @@
+{
+    "bucket_name": "pixarfilms",
+    "warehouse_path": "s3a://pixarfilms",
+    "database": "spark_catalog.default",
+    "table_keys": {
+        "brz_films": ["number"], 
+        "brz_film_ratings": ["film"],
+        "brz_genres": ["film", "value"], 
+        "brz_box_office": ["film"],
+        "slv_dim_films": ["id"],
+        "slv_dim_genres": ["id"],
+        "slv_fact_film_ratings": ["id"],
+        "slv_fact_film_genres": ["film_id", "genre_id"], 
+        "slv_fact_box_office": ["id"]
+    },
+    "source_tables": {
+        "slv_dim_films": ["brz_films"],
+        "slv_dim_genres": ["brz_genres"],
+        "slv_fact_film_ratings": ["brz_film_ratings", "slv_dim_films"],
+        "slv_fact_film_genres": ["brz_genres", "slv_dim_films", "slv_dim_genres"], 
+        "slv_fact_box_office": ["brz_box_office", "slv_dim_films"]
+    }
+}

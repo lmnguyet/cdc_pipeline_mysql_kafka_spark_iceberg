@@ -38,7 +38,8 @@ docker network create my-network
 8. spark-master (spark 3.5 python 3.12)
 ** thứ tự 3, depend minio, hive-metastore
 ** port 8080
-docker volume create spark_home
+docker build -t spark-img ./spark
+docker volume create spark_home_data
 
 9. spark-worker
 ** thứ tự 4, depend spark-master
@@ -49,7 +50,7 @@ docker volume create spark_home
 docker build -t airflow-img:2.9 ./airflow
 export AIRFLOW_UID=$(id -u)
 docker compose -f docker-compose.airflow.yml up -d airflow-init
-create spark-conn connect to sparl-master on airflow-webserver:
+create spark-conn connect to spark-master on airflow-webserver:
 - host: spark://spark-master
 - port: 7077
 - deploy mode: client
@@ -72,3 +73,11 @@ curl -X POST "http://localhost:8000/query" \
 }' | jq
 
 === relist ports of containers
+
+13. data architecture/data flow
+- mysql > kafka
+- kafka > daily data
+- daily data > bronze
+- bronze > silver (multi-dimensional model/star schema)
+
+14. optimization

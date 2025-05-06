@@ -112,15 +112,9 @@ def main():
             print(f"===== NOTHING TO MERGE ON TABLE {table}, SKIPPED =====")
             continue
 
-        # processed_df.show()
-
         processed_df.printSchema()
 
-        # SPARK.sql(f"SELECT * FROM {DATABASE_NAME}.{table}").show(40)
-
         merge(processed_df, table, TABLE_KEYS[table])
-
-        # SPARK.sql(f"SELECT * FROM {DATABASE_NAME}.{table}").show(40)
 
         print(f"===== FINISHED MERGING TABLE {table} =====")
 

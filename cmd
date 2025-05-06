@@ -136,6 +136,43 @@ export AIRFLOW_CONN_SPARK_DEFAULT=spark://spark-master:7077
 
 pip uninstall -y apache-airflow
 
+
+=================================
+SELECT TBL_ID FROM TBLS WHERE TBL_NAME = 'slv_fact_box_office' AND DB_ID = 1;
+SELECT SD_ID FROM TBLS WHERE TBL_ID = 25;
+SELECT SERDE_ID FROM SDS WHERE SD_ID = 25;
+
+
+DELETE FROM COLUMNS_V2 WHERE CD_ID IN (
+    SELECT CD_ID FROM SDS WHERE SD_ID = 25
+);
+DELETE FROM TABLE_PARAMS WHERE TBL_ID = 25;
+DELETE FROM SD_PARAMS WHERE SD_ID = 25;
+DELETE FROM TBLS WHERE TBL_ID = 25;
+DELETE FROM SDS WHERE SD_ID = 25;
+DELETE FROM SERDES WHERE SERDE_ID = 25;
+
+
+spark-submit /tmp/jobs/silver_incremental_load.py --tables slv_dim_films
+spark-submit /tmp/jobs/silver_incremental_load.py --tables slv_dim_genres
+spark-submit /tmp/jobs/silver_incremental_load.py --tables slv_fact_film_genres
+spark-submit /tmp/jobs/silver_incremental_load.py --tables slv_fact_film_ratings
+spark-submit /tmp/jobs/silver_incremental_load.py --tables slv_fact_box_office
+
+select count(1) from iceberg.default.slv_fact_film_ratings;
+
+spark-submit /tmp/jobs/silver_incremental_load.py --tables slv_dim_films
+SELECT COALESCE(source_snapshot_id, '0') AS source_snapshot_id
+FROM iceberg.default.cfg_snapshots_tracking
+WHERE sink_table = 'spark_catalog.default.slv_dim_films' AND source_table = 'spark_catalog.default.brz_films'
+ORDER BY committed_at DESC
+LIMIT 1
+
+SELECT snapshot_id 
+FROM iceberg.default.brz_dim_films.snapshots
+ORDER BY committed_at DESC
+LIMIT 1
+
 ===========================================================================================================================================
 SELECT *
 FROM iceberg.default."films$snapshots"

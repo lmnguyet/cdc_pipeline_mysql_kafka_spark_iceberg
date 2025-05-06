@@ -99,9 +99,10 @@ services:
       - my-network
 
   spark-master:
-    build: 
-      context: ./spark
-      dockerfile: ./Dockerfile
+    # build: 
+    #   context: ./spark
+    #   dockerfile: ./Dockerfile
+    image: spark-img
     container_name: spark-master
     env_file:
       - envs/spark-master.env
@@ -111,12 +112,7 @@ services:
     volumes:
       - ./spark/spark-defaults.conf:/tmp/spark-defaults.conf
       - ./spark/jobs:/tmp/jobs
-      - spark_home:/opt/bitnami/spark
-      # - ./spark/jobs:/opt/bitnami/spark/jobs
-      # - ./spark/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf
-    # depends_on:
-    #   - connector
-    #   - hive-metastore
+      - spark_home_data:/opt/bitnami/spark
     entrypoint: bash -c "cp /tmp/spark-defaults.conf /opt/bitnami/spark/conf/spark-defaults.conf && cp -r /tmp/jobs /opt/bitnami/spark/ && /opt/bitnami/spark/sbin/start-master.sh && tail -f /dev/null"
     networks:
       - my-network
@@ -176,7 +172,7 @@ services:
 volumes:
   mysql_data:
   minio_data:
-  spark_home:
+  spark_home_data:
     external: true
 
 networks:
