@@ -6,6 +6,9 @@ from pyspark.sql.window import Window
 from minio import Minio
 from minio.error import S3Error
 import pytz
+import argparse
+import json
+import os
 
 # create spark session
 SPARK = SparkSession.builder \
@@ -15,23 +18,25 @@ SPARK = SparkSession.builder \
 # source config
 SOURCE_BUCKET_NAME = "incpixarfilms"
 TOPIC_PREFIX = "dbserver1.pixar_films"
-TOPIC_NAMES = ["films", "film_ratings", "genres", "box_office"]
 
 UPSERT_DATE = datetime.now(pytz.timezone("Asia/Ho_Chi_Minh")).strftime('%Y-%m-%d')
-# UPSERT_DATE = "2025-04-14"
-# SOURCE_PATH = f"s3a://{SOURCE_BUCKET_NAME}/topics/{TOPIC_NAME}/{UPSERT_DATE}/*.json"
 
-# sink config
-SINK_BUCKET_NAME = "pixarfilms"
+def load_params():
+    """Load params from params file"""
+    global WAREHOUSE_PATH, DATABASE_NAME, TABLE_KEYS
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    params_path = os.path.join(script_dir, 'params.json')
+    try:
+        with open(params_path) as f:
+            params = json.load(f)
+        WAREHOUSE_PATH = params["warehouse_path"]
+        DATABASE_NAME = params["database"]
+        TABLE_KEYS = params["table_keys"]
+        
+        print(f"LOADED PARAMS SUCCESSFULLY.")
 
-WAREHOUSE_PATH = f"s3a://{SINK_BUCKET_NAME}"
-DATABASE_NAME = "spark_catalog.default"
-TABLE_KEYS = {
-    "brz_films": ["number"], 
-    "brz_film_ratings": ["film"],
-    "brz_genres": ["film", "value"], 
-    "brz_box_office": ["film"]
-}
+    except FileNotFoundError:
+        raise ValueError(f"No processing logic found")
 
 def read_upsert(src_table, sink_table, key_columns=["number"]):
     sink_df = SPARK.sql(f"SELECT * FROM {DATABASE_NAME}.{sink_table}")
@@ -104,7 +109,20 @@ def merge(upsert_df, sink_table, key_columns=["number"]):
     """)
 
 def main():
-    for topic, table in zip(TOPIC_NAMES, TABLE_KEYS.keys()):
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--tables",
+        default="brz_films,brz_film_ratings,brz_genres,brz_box_office",
+        help="Comma-separated list of tables to process"
+    )
+    args = parser.parse_args()
+
+    load_params()
+
+    table_names = args.tables.split(',')
+    topic_names = [table[4:] for table in table_names]
+
+    for topic, table in zip(topic_names, table_names):
         print(f"===== MERGING TABLE {table} =====")
         processed_df = read_upsert(topic, table, TABLE_KEYS[table])
 

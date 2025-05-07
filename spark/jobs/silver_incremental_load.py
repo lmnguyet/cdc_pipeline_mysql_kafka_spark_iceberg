@@ -27,14 +27,13 @@ def load_params():
             params = json.load(f)
         WAREHOUSE_PATH = params["warehouse_path"]
         DATABASE_NAME = params["database"]
-        # for table in params["table_keys"]:
         TABLE_KEYS = params["table_keys"]
         SOURCE_TABLES = params["source_tables"]
         
         print(f"LOADED PARAMS SUCCESSFULLY.")
 
     except FileNotFoundError:
-        raise ValueError(f"No processing logic found for table: {table_name}")
+        raise ValueError(f"No processing logic found")
 
 def get_current_snapshot_id(table_fullname):
     """Get current snapshot id of a table."""

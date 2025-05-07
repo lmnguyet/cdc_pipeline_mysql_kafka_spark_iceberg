@@ -23,7 +23,10 @@ bronze_incremental_loading_job = SparkSubmitOperator(
     conn_id='spark-conn',
     verbose=False,
     dag=dag,
-    name='bronze_incremental_load'
+    name='bronze_incremental_load',
+    application_args=[
+        "--tables", "brz_films,brz_film_ratings,brz_genres,brz_box_office"
+    ]
 )
 
 silver_incremental_loading_job = SparkSubmitOperator(

@@ -44,7 +44,7 @@ docker volume create spark_home_data
 9. spark-worker
 ** thứ tự 4, depend spark-master
 
-10. airflow (jdk 17 python 3.12 airflow minio)
+10. airflow (airflow 2.9.3 jdk 17 python 3.12 airflow minio)
 ** thứ tự 5
 ** port 18080
 docker build -t airflow-img:2.9 ./airflow
@@ -54,7 +54,7 @@ create spark-conn connect to spark-master on airflow-webserver:
 - host: spark://spark-master
 - port: 7077
 - deploy mode: client
-mount spark_home from spark-master to airflow
+mount spark_home_data from spark-master to airflow & add $SPARK_HOME to PATH
 
 11. superset
 ** port 8088

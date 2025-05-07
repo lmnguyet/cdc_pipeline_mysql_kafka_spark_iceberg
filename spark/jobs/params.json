@@ -19,5 +19,12 @@
         "slv_fact_film_ratings": ["brz_film_ratings", "slv_dim_films"],
         "slv_fact_film_genres": ["brz_genres", "slv_dim_films", "slv_dim_genres"], 
         "slv_fact_box_office": ["brz_box_office", "slv_dim_films"]
+    },
+    "zorder_columns": {
+        "slv_dim_films": ["film", "release_date"],
+        "slv_dim_genres": ["genre"],
+        "slv_fact_film_ratings": ["rotten_tomatoes_score", "metacritic_score", "cinema_score", "imdb_score"],
+        "slv_fact_film_genres": ["genre_id", "is_primary_genre"], 
+        "slv_fact_box_office": ["budget"]
     }
 }

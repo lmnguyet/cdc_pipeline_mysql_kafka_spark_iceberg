@@ -1,9 +1,10 @@
-dataset/
-mysql/
-.env
-draft
+_/
 airflow/config
 airflow/plugins
 airflow/logs
 airflow/dags/__pycache__
-students*
+dataset/
+spark/jobs/silver_load.py
+spark/jobs/test.py
+cmd
+note
