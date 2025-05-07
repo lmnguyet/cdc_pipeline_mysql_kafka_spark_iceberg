@@ -1,6 +1,10 @@
 # Complete Open-source End-to-end Data Pipeline
 A **Docker-based** data pipeline to ingest and synchronize data from **MySQL** to **MinIO Iceberg Table** using **Debezium** for Changed Data Capture (CDC), **Apache Spark** for processing, **Apache Airflow** for orchestration and **Trino** for querying.
 
+![](images/full_flow.png)
+
+![](images/detail_flow.png)
+
 **What have been done in this pipeline**
 - Capturing MySQL database changes via Debezium (CDC).
 - Processing data with Apache Spark.
