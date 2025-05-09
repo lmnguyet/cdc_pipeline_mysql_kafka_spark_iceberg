@@ -18,7 +18,6 @@ A **Docker-based** data pipeline to ingest and synchronize data from **MySQL** t
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Usage](#usage)
-- [License](#license)
 
 ## Prerequisites
 WSL version: 2.4.12.0
@@ -151,5 +150,3 @@ curl -X POST "http://localhost:8000/query" \
     "sql": <Your SQL query>
 }' | jq
 ```
-
-## Reference
